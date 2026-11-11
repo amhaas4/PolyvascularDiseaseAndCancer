@@ -7,7 +7,7 @@ library(sas7bdat)
 library(ggplot2)
 library(dplyr)
 
-dtm <- read.sas7bdat("V://userspace//amhaas//Nead//Polyvascular Disease//Working Files - Revisions//hrs_out_rev_new.sas7bdat")
+dtm <- read.sas7bdat("V://userspace//amhaas//Nead//Polyvascular Disease//Working Files - Revisions//Quarantine 2//hrs_out_rev_new.sas7bdat")
 head(dtm)
 
 
@@ -44,10 +44,9 @@ lower <- dtm$WaldLower
 upper <- dtm$WaldUpper
  
 
-dtm2 <- data.frame(dtm$CANCER_TYPE,dtm$VALUE,dtm$POUT)
+dtm2 <- data.frame(dtm$CANCER_TYPE,dtm$VALUE,dtm$QOUT)
 head(dtm2)
-colnames(dtm2) <- c('cancer','value','p')
-temp <- rep(NA,3)
+colnames(dtm2) <- c('cancer','value', 'padj')
 
 dtm3 <- cbind(mean,lower,upper)
 
@@ -59,7 +58,7 @@ library(tidyr)
 
 xplot <- dtm3 |>
   forestplot(labeltext=dtm2, boxsize=.2, hrzl_lines=TRUE,zero=1,xlab='Hazard Ratios (95% CI)',title='Hazard Ratios for Specific Cancers (2+ Types vs. 1 Type)', txt_gp= fpTxtGp(ticks=gpar(cex=1),xlab=gpar(cex=1)))|>
-  fp_add_header(cancer=c("Cancer Type",""), value=c("Hazard Ratio", "(95% CI)"),p=c("P-Value",""))
+  fp_add_header(cancer=c("Cancer Type",""), value=c("Hazard Ratio", "(95% CI)"),padj=c("FDR Adjusted","P-Value"))
 
 xplot
 
